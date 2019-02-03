@@ -11,32 +11,42 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CreateCatDto } from './create-cat.dto';
+import { CatsService } from './cats.services';
+import { Cat } from './interfaces/cat.interface';
 
 @Controller('cats')
 export class CatsController {
+  /*
+    The CatsService is injected through the class constructor. 
+    Don't be afraid of the private readonly shortened syntax. 
+    It means that we've created and initialized the catsService member 
+    immediately in the same location.
+*/
+  constructor(private readonly catsService: CatsService) {}
+
   @Post()
-  async create(@Body() CreateCatDto: CreateCatDto) {
-    return 'This action creates a new cat';
+  async create(@Body() createCatDto: CreateCatDto) {
+    this.catsService.create(createCatDto);
   }
 
   @Get()
-  findAll(@Query() query) {
-    return `This action returns all cats (limit: ${query.limit} items)`;
+  async findAll(): Promise<Cat[]> {
+    return this.catsService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id) {
-    console.log(id);
-    return `This action returns a #${id} cat`;
-  }
+  //   @Get(':id')
+  //   findOne(@Param('id') id) {
+  //     console.log(id);
+  //     return `This action returns a #${id} cat`;
+  //   }
 
-  @Put(':id')
-  PaymentRequestUpdateEvent(@Param('id') id, @Body() updateCatDto) {
-    return `This action updates a #${id} cat`;
-  }
+  //   @Put(':id')
+  //   PaymentRequestUpdateEvent(@Param('id') id, @Body() updateCatDto) {
+  //     return `This action updates a #${id} cat`;
+  //   }
 
-  @Delete(':id')
-  remove(@Param('id') id) {
-    return `This action removes a #${id} cat`;
-  }
+  //   @Delete(':id')
+  //   remove(@Param('id') id) {
+  //     return `This action removes a #${id} cat`;
+  //   }
 }
